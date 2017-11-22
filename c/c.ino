@@ -21,7 +21,7 @@ double delT = 0.1, x, y, sx = 0, sy = 0;
 int16_t AcX, AcY, AcZ;
 const char* SSID = "G_6339";
 const char* PASSWORD = "aassddaa";
-const char* rpiHost = "192.168.137.1";
+const char* rpiHost = "192.168.43.213";
 WiFiClient client;
 HTTPClient http;
 StaticJsonBuffer<300> jsonBuffer;
@@ -111,14 +111,16 @@ void readRawMPU()
   AcY |= Wire.read();
   AcZ = Wire.read() << 8;
   AcZ |= Wire.read();
-  sx =  AcX * delT * delT * 0.5;
-  sy =  AcY * delT * delT * 0.5;
+  //sx =  AcX * delT * delT * 0.5;
+  //sy =  AcY * delT * delT * 0.5;
+  sy=-1*AcY/1000;
+  sx=-1*AcX/1000;
   Serial.print("X = "); Serial.print(sx);
   Serial.print(" | Y = "); Serial.print(sy);
   x = (double)AcX * delT * delT * 0.5;
   y = (double)AcY * delT * delT * 0.5;
   Serial.println("");
-  delay(delT * 1000);
+  //delay(delT * 1000);
 }
 void reconnectWiFi()
 {
