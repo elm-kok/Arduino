@@ -21,7 +21,7 @@ double delT = 0.1, x, y, sx = 0, sy = 0;
 int16_t AcX, AcY, AcZ;
 const char* SSID = "G_6339";
 const char* PASSWORD = "aassddaa";
-const char* rpiHost = "192.168.43.213";
+const String rpiHost = "192.168.43.213";
 WiFiClient client;
 HTTPClient http;
 StaticJsonBuffer<300> jsonBuffer;
@@ -113,8 +113,8 @@ void readRawMPU()
   AcZ |= Wire.read();
   //sx =  AcX * delT * delT * 0.5;
   //sy =  AcY * delT * delT * 0.5;
-  sy=-1*AcY/1000;
-  sx=-1*AcX/1000;
+  sy=-1*(int)(AcY/1000)*8;
+  sx=-1*(int)(AcX/1000)*8;
   Serial.print("X = "); Serial.print(sx);
   Serial.print(" | Y = "); Serial.print(sy);
   x = (double)AcX * delT * delT * 0.5;
@@ -162,7 +162,9 @@ void makePOST()
   if (WiFi.status() == WL_CONNECTED) {
     Serial.println("Connected");
     HTTPClient http;
-    http.begin("http://192.168.43.213:3000/move-by");
+    String a="http://"+rpiHost+":3000/move-by";
+     http.begin(a);
+     Serial.println(a);
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
     int httpCode = http.POST(PostData);
     String payload = http.getString();
@@ -175,7 +177,9 @@ void leftCli() {
   if (WiFi.status() == WL_CONNECTED) {
     Serial.println("Connected");
     HTTPClient http;
-    http.begin("http://192.168.43.213:3000/left-click");
+    String a="http://"+rpiHost+":3000/left-click";
+    Serial.println(a);
+    http.begin(a);
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
     int httpCode = http.POST("");
     String payload = http.getString();
